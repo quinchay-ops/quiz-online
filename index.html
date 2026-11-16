@@ -1,0 +1,564 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSCNSSAT | Assessment Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue: #1769e8;
+  --dark: #123b75;
+  --light: #eaf3ff;
+  --white: #ffffff;
+  --text: #18345a;
+  --muted: #7890ad;
+  --glass: rgba(255,255,255,.72);
+  --border: rgba(255,255,255,.85);
+  --shadow: 0 12px 35px rgba(38,93,160,.10);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:Inter,sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 10% 10%,#b8d8ff 0,transparent 35%),
+    radial-gradient(circle at 90% 80%,#c9e9ff 0,transparent 35%),
+    linear-gradient(135deg,#f5f9ff,#e5f1ff);
+}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+.app { display:flex; min-height:100vh; }
+.sidebar {
+  width:250px;
+  padding:28px 18px;
+  background:rgba(255,255,255,.58);
+  backdrop-filter:blur(22px);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  gap:30px;
+}
+.brand { display:flex; align-items:center; gap:12px; padding:5px; }
+.logo {
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(135deg,#1671f5,#63b8ff);
+  color:white;display:grid;place-items:center;
+  font-size:20px;font-weight:800;
+  box-shadow:0 8px 20px #1769e840;
+}
+.brand h2 {font-size:15px;line-height:1.4;}
+.brand small {color:var(--muted);font-size:10px;}
+.nav-label {font-size:10px;letter-spacing:1.5px;color:var(--muted);padding:0 12px;margin-bottom:8px;}
+.nav-btn {
+  width:100%;padding:13px 14px;border:0;
+  border-radius:12px;background:transparent;
+  color:#647e9e;text-align:left;
+  margin:3px 0;font-size:13px;font-weight:600;
+}
+.nav-btn:hover,.nav-btn.active {
+  background:linear-gradient(100deg,#e0edff,#f1f7ff);
+  color:var(--blue);
+}
+.nav-btn span {margin-right:12px;}
+.sidebar-bottom {margin-top:auto;font-size:11px;color:var(--muted);padding:12px;}
+.main {flex:1;padding:30px 38px;min-width:0;}
+.topbar {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:30px;gap:15px;
+}
+.topbar h1 {font-size:24px;letter-spacing:-.8px;}
+.topbar p {font-size:12px;color:var(--muted);margin-top:6px;}
+.profile {
+  display:flex;align-items:center;gap:10px;
+  background:var(--glass);padding:9px 14px;
+  border:1px solid white;border-radius:15px;
+}
+.avatar {
+  width:34px;height:34px;border-radius:11px;
+  background:#dceaff;color:var(--blue);
+  display:grid;place-items:center;font-weight:800;
+}
+.profile small {display:block;color:var(--muted);font-size:10px;margin-top:3px;}
+.glass {
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+}
+.welcome {
+  padding:30px;
+  background:linear-gradient(115deg,#1769e8,#56a9ff);
+  color:white;position:relative;overflow:hidden;
+  margin-bottom:22px;
+}
+.welcome:after {
+  content:"";position:absolute;width:240px;height:240px;
+  border:40px solid #ffffff20;border-radius:50%;
+  right:-50px;top:-110px;
+}
+.welcome h2 {font-size:25px;margin-bottom:10px;}
+.welcome p {font-size:13px;opacity:.9;max-width:470px;line-height:1.7;}
+.welcome button {
+  background:white;color:var(--blue);border:0;
+  border-radius:11px;padding:12px 18px;
+  font-weight:700;margin-top:20px;
+}
+.stats {
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-bottom:22px;
+}
+.stat {padding:22px;}
+.stat small {color:var(--muted);font-size:11px;}
+.stat h2 {font-size:27px;margin-top:12px;}
+.stat-icon {
+  width:37px;height:37px;background:#e4efff;
+  color:var(--blue);display:grid;place-items:center;
+  border-radius:12px;margin-bottom:12px;
+}
+.section-head {
+  display:flex;align-items:center;justify-content:space-between;
+  margin:25px 0 15px;
+}
+.section-head h2 {font-size:16px;}
+.section-head small {color:var(--muted);}
+.exam-list {display:grid;grid-template-columns:repeat(2,1fr);gap:15px;}
+.exam-card {padding:21px;}
+.exam-card h3 {font-size:14px;margin:12px 0 7px;}
+.exam-card p {font-size:11px;color:var(--muted);line-height:1.7;}
+.tag {
+  display:inline-block;padding:6px 10px;border-radius:20px;
+  background:#e5efff;color:var(--blue);
+  font-size:10px;font-weight:700;
+}
+.primary {
+  background:linear-gradient(120deg,#1769e8,#4297ff);
+  color:white;border:0;border-radius:11px;
+  padding:12px 17px;font-weight:700;font-size:12px;
+  box-shadow:0 6px 15px #1769e830;
+}
+.secondary {
+  background:white;color:var(--blue);
+  border:1px solid #d9e8ff;border-radius:11px;
+  padding:11px 16px;font-weight:600;font-size:12px;
+}
+input,select,textarea {
+  width:100%;padding:13px 14px;
+  border:1px solid #dce9f8;border-radius:11px;
+  background:#ffffffb8;color:var(--text);
+  outline:none;margin:7px 0 15px;
+}
+input:focus,select:focus,textarea:focus {
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px #1769e815;
+}
+label {font-size:11px;font-weight:700;color:#526e91;}
+.panel {padding:25px;margin-bottom:18px;}
+.hidden {display:none!important;}
+.exam-screen {max-width:850px;margin:auto;}
+.exam-top {
+  display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:20px;
+}
+.timer {color:var(--blue);font-weight:800;font-size:18px;}
+.progress {
+  height:7px;background:#dceaff;border-radius:20px;
+  overflow:hidden;margin:20px 0;
+}
+.progress div {height:100%;background:var(--blue);transition:.3s;}
+.question {font-size:19px;line-height:1.6;margin:25px 0;}
+.option {
+  display:block;padding:15px;margin:10px 0;
+  border:1px solid #dce9f8;border-radius:12px;
+  cursor:pointer;font-size:13px;background:#ffffffa8;
+}
+.option:has(input:checked) {
+  border-color:var(--blue);background:#eaf3ff;
+}
+.option input {width:auto;margin:0 10px 0 0;}
+.table-wrap {overflow-x:auto;}
+table {width:100%;border-collapse:collapse;font-size:12px;}
+td,th {padding:14px;text-align:left;border-bottom:1px solid #e4edf8;}
+th {color:var(--muted);font-size:10px;text-transform:uppercase;}
+.empty {text-align:center;padding:35px;color:var(--muted);font-size:13px;}
+.footer {text-align:center;color:var(--muted);font-size:10px;margin-top:35px;}
+.toast {
+  position:fixed;bottom:25px;right:25px;
+  padding:15px 20px;background:#123b75;color:white;
+  border-radius:12px;font-size:12px;z-index:10;
+}
+@media(max-width:800px) {
+  .sidebar {width:75px;padding:20px 9px;}
+  .brand h2,.brand small,.nav-label,.nav-btn .nav-text,.sidebar-bottom {display:none;}
+  .brand {justify-content:center;}
+  .nav-btn {text-align:center;padding:14px 5px;}
+  .nav-btn span {margin:0;}
+  .main {padding:22px 15px;}
+}
+@media(max-width:550px) {
+  .stats {grid-template-columns:1fr;}
+  .exam-list {grid-template-columns:1fr;}
+  .topbar h1 {font-size:19px;}
+  .profile {padding:7px;}
+  .profile div:last-child {display:none;}
+  .welcome {padding:22px;}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo">G</div>
+    <div>
+      <h2>GSCNSSAT</h2>
+      <small>ASSESSMENT HUB</small>
+    </div>
+  </div>
+
+  <div>
+    <div class="nav-label">MAIN MENU</div>
+    <button class="nav-btn active" onclick="showPage('home',this)">
+      <span>⌂</span><span class="nav-text">Dashboard</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('assessments',this)">
+      <span>▤</span><span class="nav-text">Assessments</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('results',this)">
+      <span>◷</span><span class="nav-text">My Results</span>
+    </button>
+  </div>
+
+  <div>
+    <div class="nav-label">ADMINISTRATION</div>
+    <button class="nav-btn" onclick="showPage('teacher',this)">
+      <span>▣</span><span class="nav-text">Teacher Studio</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('reports',this)">
+      <span>▥</span><span class="nav-text">Reports</span>
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    GSCNSSAT<br>Academic Assessment System<br>Version 1.0
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar">
+    <div>
+      <h1 id="pageTitle">Dashboard</h1>
+      <p>Welcome to your academic assessment portal.</p>
+    </div>
+    <div class="profile">
+      <div class="avatar">S</div>
+      <div>
+        <strong style="font-size:12px">Guest User</strong>
+        <small>Demo access</small>
+      </div>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <section id="home" class="page">
+    <div class="welcome glass">
+      <h2>Learn. Assess. Achieve.</h2>
+      <p>Your digital assessment space. Access your examinations,
+      monitor your academic progress, and keep learning.</p>
+      <button onclick="showPage('assessments')">Explore Assessments →</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat glass">
+        <div class="stat-icon">▤</div>
+        <small>Available Assessments</small>
+        <h2 id="assessmentCount">2</h2>
+      </div>
+      <div class="stat glass">
+        <div class="stat-icon">✓</div>
+        <small>Completed Assessments</small>
+        <h2 id="completedCount">0</h2>
+      </div>
+      <div class="stat glass">
+        <div class="stat-icon">★</div>
+        <small>Average Score</small>
+        <h2 id="averageScore">--</h2>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Featured Assessments</h2>
+      <small>Available activities</small>
+    </div>
+    <div class="exam-list" id="featuredList"></div>
+  </section>
+
+  <!-- ASSESSMENTS -->
+  <section id="assessments" class="page hidden">
+    <div class="section-head">
+      <h2>Available Assessments</h2>
+      <small>Select an assessment to begin</small>
+    </div>
+    <div class="exam-list" id="assessmentList"></div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="page hidden">
+    <div class="glass panel">
+      <div class="section-head">
+        <h2>My Assessment History</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Assessment</th><th>Score</th><th>Date</th></tr></thead>
+          <tbody id="studentResults"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEACHER STUDIO -->
+  <section id="teacher" class="page hidden">
+    <div class="glass panel">
+      <h2 style="font-size:18px;margin-bottom:8px">Teacher Studio</h2>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:20px">
+        Create and manage classroom assessments.
+        This is a demonstration workspace, not a secured teacher account.
+      </p>
+      <label>Assessment Title</label>
+      <input id="newTitle" placeholder="e.g. Science - Quarterly Assessment">
+      <label>Subject</label>
+      <input id="newSubject" placeholder="e.g. General Science">
+      <label>Access Code</label>
+      <input id="newCode" placeholder="e.g. SCI2026">
+      <label>Time Limit (minutes)</label>
+      <input id="newTime" type="number" min="1" value="30">
+      <button class="primary" onclick="createAssessment()">+ Create Assessment</button>
+    </div>
+
+    <div class="glass panel">
+      <h3 style="font-size:15px;margin-bottom:15px">Add Questions</h3>
+      <label>Select Assessment</label>
+      <select id="questionAssessment"></select>
+      <label>Question</label>
+      <textarea id="questionText" rows="3" placeholder="Enter your question"></textarea>
+      <label>Option A</label><input id="optionA" placeholder="Option A">
+      <label>Option B</label><input id="optionB" placeholder="Option B">
+      <label>Option C</label><input id="optionC" placeholder="Option C">
+      <label>Option D</label><input id="optionD" placeholder="Option D">
+      <label>Correct Answer</label>
+      <select id="correctAnswer">
+        <option value="0">Option A</option>
+        <option value="1">Option B</option>
+        <option value="2">Option C</option>
+        <option value="3">Option D</option>
+      </select>
+      <button class="primary" onclick="addQuestion()">Save Question</button>
+    </div>
+  </section>
+
+  <!-- REPORTS -->
+  <section id="reports" class="page hidden">
+    <div class="glass panel">
+      <h2 style="font-size:17px;margin-bottom:15px">Assessment Reports</h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:20px">
+        Review locally stored demonstration results.
+      </p>
+      <button class="primary" onclick="exportCSV()">Download CSV Report</button>
+      <div class="table-wrap" style="margin-top:20px">
+        <table>
+          <thead><tr><th>Student</th><th>Assessment</th><th>Score</th><th>Date</th></tr></thead>
+          <tbody id="allResults"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXAMINATION -->
+  <section id="exam" class="page hidden">
+    <div class="exam-screen">
+      <div class="exam-top">
+        <button class="secondary" onclick="exitExam()">← Exit</button>
+        <div class="timer" id="timer">30:00</div>
+      </div>
+      <div class="glass panel">
+        <div class="tag" id="examSubject">SUBJECT</div>
+        <h2 id="examTitle" style="margin-top:12px;font-size:18px"></h2>
+        <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+        <small id="questionCounter" style="color:var(--muted)"></small>
+        <h3 class="question" id="questionDisplay"></h3>
+        <div id="optionsDisplay"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:25px">
+          <button class="secondary" onclick="previousQuestion()">Previous</button>
+          <button class="primary" id="nextBtn" onclick="nextQuestion()">Next →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN SCREEN -->
+  <section id="join" class="page hidden">
+    <div class="glass panel" style="max-width:500px;margin:35px auto">
+      <h2 style="font-size:20px;margin-bottom:8px">Join Assessment</h2>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:20px">
+        Enter your student information and assessment access code.
+      </p>
+      <label>Full Name</label>
+      <input id="studentName" placeholder="Enter your complete name">
+      <label>Grade Level</label>
+      <select id="studentGrade">
+        <option value="">Select grade</option>
+        <option>Grade 7</option><option>Grade 8</option>
+        <option>Grade 9</option><option>Grade 10</option>
+        <option>Grade 11</option><option>Grade 12</option>
+      </select>
+      <label>Section</label>
+      <input id="studentSection" placeholder="Enter section">
+      <label>Assessment Code</label>
+      <input id="studentCode" placeholder="Enter access code">
+      <button class="primary" style="width:100%" onclick="joinExam()">Start Assessment →</button>
+    </div>
+  </section>
+
+  <!-- FINISHED -->
+  <section id="finished" class="page hidden">
+    <div class="glass panel" style="max-width:500px;margin:50px auto;text-align:center">
+      <div class="stat-icon" style="margin:0 auto 18px;font-size:22px">✓</div>
+      <h2>Assessment Completed!</h2>
+      <p style="color:var(--muted);font-size:12px;margin:12px 0">Your answers have been submitted.</p>
+      <h1 id="finalScore" style="font-size:40px;color:var(--blue);margin:20px"></h1>
+      <button class="primary" onclick="showPage('home')">Return to Dashboard</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    GSCNSSAT ASSESSMENT HUB · ACADEMIC YEAR 2026–2027
+  </div>
+</main>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const sampleAssessments = [
+  {
+    id:1,title:"General Science Quiz",subject:"Science",
+    code:"SCI2026",minutes:30,
+    questions:[
+      {q:"Which organelle produces most of the energy in a cell?",
+       a:["Nucleus","Mitochondrion","Ribosome","Golgi body"],correct:1},
+      {q:"What is the chemical symbol for water?",
+       a:["CO2","O2","H2O","NaCl"],correct:2},
+      {q:"Which planet is known as the Red Planet?",
+       a:["Venus","Jupiter","Mars","Saturn"],correct:2}
+    ]
+  },
+  {
+    id:2,title:"English Grammar Assessment",subject:"English",
+    code:"ENG2026",minutes:20,
+    questions:[
+      {q:"Which word is a noun?",
+       a:["Quickly","Beautiful","Teacher","Run"],correct:2},
+      {q:"Choose the correct sentence.",
+       a:["She go to school.","She goes to school.","She going school.","She gone school."],correct:1}
+    ]
+  }
+];
+
+let assessments = JSON.parse(localStorage.getItem("gsc_assessments"))
+  || sampleAssessments;
+let results = JSON.parse(localStorage.getItem("gsc_results")) || [];
+let currentAssessment = null;
+let currentQuestion = 0;
+let answers = [];
+let student = {};
+let timeLeft = 0;
+let timerInterval = null;
+
+function saveData(){
+  localStorage.setItem("gsc_assessments",JSON.stringify(assessments));
+  localStorage.setItem("gsc_results",JSON.stringify(results));
+}
+function notify(message){
+  const toast=document.getElementById("toast");
+  toast.textContent=message;
+  toast.classList.remove("hidden");
+  setTimeout(()=>toast.classList.add("hidden"),2500);
+}
+function showPage(page,button){
+  clearInterval(timerInterval);
+  document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+  document.getElementById(page).classList.remove("hidden");
+  document.getElementById("pageTitle").textContent =
+    ({home:"Dashboard",assessments:"Assessments",results:"My Results",
+      teacher:"Teacher Studio",reports:"Reports",exam:"Examination",
+      join:"Join Assessment",finished:"Completed"})[page];
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  if(button)button.classList.add("active");
+  if(page==="home"||page==="assessments")renderAssessments();
+  if(page==="results")renderStudentResults();
+  if(page==="reports")renderReports();
+  if(page==="teacher")renderSelect();
+  updateStats();
+}
+function renderAssessments(){
+  const html=assessments.map(a=>`
+    <div class="exam-card glass">
+      <span class="tag">${a.subject}</span>
+      <h3>${escapeHTML(a.title)}</h3>
+      <p>${a.questions.length} questions · ${a.minutes} minutes</p>
+      <button class="primary" style="margin-top:15px"
+        onclick="selectAssessment(${a.id})">Take Assessment →</button>
+    </div>`).join("") || '<div class="empty">No assessments available.</div>';
+  document.getElementById("featuredList").innerHTML=html;
+  document.getElementById("assessmentList").innerHTML=html;
+  document.getElementById("assessmentCount").textContent=assessments.length;
+}
+function selectAssessment(id){
+  currentAssessment=assessments.find(a=>a.id===id);
+  showPage("join");
+}
+function joinExam(){
+  student={
+    name:document.getElementById("studentName").value.trim(),
+    grade:document.getElementById("studentGrade").value,
+    section:document.getElementById("studentSection").value.trim(),
+    code:document.getElementById("studentCode").value.trim()
+  };
+  if(!student.name||!student.grade||!student.section||!student.code){
+    notify("Please complete all fields.");return;
+  }
+  if(student.code.toUpperCase()!==currentAssessment.code.toUpperCase()){
+    notify("Incorrect assessment code.");return;
+  }
+  if(!currentAssessment.questions.length){
+    notify("This assessment has no questions yet.");return;
+  }
+  currentAssessment.questions=[
+    ...currentAssessment.questions
+  ].sort(()=>Math.random()-.5);
+  currentQuestion=0;
+  answers=new Array(currentAssessment.questions.length).fill(null);
+  timeLeft=currentAssessment.minutes*60;
+  showPage("exam");
+  renderQuestion();
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    document.getElementById("timer").textContent=
+      `${Math.floor(timeLeft/60).toString().padStart(2,"0")}:${(timeLeft%60).toString().padStart(2,"0")}`;
+    if(timeLeft<=0)finishExam();
+  },1000);
+}
+function renderQuestion(){
+  const q=currentAssessment.questions[currentQuestion];
+  document.getElementById("examTitle").textContent=currentAssessment.title;
+  document.getElementById("examSubject").textContent=currentAssessment.subject;
+  document.getElementById("questionCounter").textContent=
+    `QUESTION ${currentQuestion+1} OF ${currentAssessment.questions.length}`;
+  docume
